@@ -34,79 +34,25 @@ public class GameController : MonoBehaviour {
 	
 	//Move the piece selected
 	public void MovePiece(Vector3 coordToMove){
-
-		Vector3 currentPosition = selectedPiece.transform.position;
-		switch(selectedPiece.name){
-			case "Pawn":
-				if(currentPosition == coordToMove){
-					break;
-				}else if(currentPosition.x == coordToMove.x && (coordToMove.z - currentPosition.z) < 3 && (coordToMove.z - currentPosition.z) > 0){
+		switch(getSelectedPiece().tag){
+			case "White":
+				WhitePiecesController whitePieceController = selectedPiece.GetComponent<WhitePiecesController> ();
+				if(whitePieceController.IsMoveValid(coordToMove)){
 					selectedPiece.transform.position = coordToMove;
 					Debug.Log ("Animation_moving"); //Play animation(moving)
 					selectedPiece = null;
 				}
 				break;
-
-			case "Bishop":
-				if(currentPosition == coordToMove){
-					break;
-				}else if((coordToMove.x - currentPosition.x) == (coordToMove.z - currentPosition.z) || (coordToMove.x + coordToMove.z) == (currentPosition.x + currentPosition.z)){
+			case "Black":	
+				BlackPiecesController blackPieceController = selectedPiece.GetComponent<BlackPiecesController> ();
+				if(blackPieceController.IsMoveValid(coordToMove)){
 					selectedPiece.transform.position = coordToMove;
 					Debug.Log ("Animation_moving"); //Play animation(moving)
 					selectedPiece = null;
 				}
 				break;
-
-			case "Rook":
-				if(currentPosition == coordToMove){
-					break;
-				}else if((coordToMove.x != currentPosition.x && coordToMove.z == currentPosition.z) || (coordToMove.x == currentPosition.x && currentPosition.z != coordToMove.z)){
-					selectedPiece.transform.position = coordToMove;
-					Debug.Log ("Animation_moving"); //Play animation(moving)
-					selectedPiece = null;
-				}
-				break;
-
-			case "Queen":
-				if(currentPosition == coordToMove){
-					break;
-				}else if(((coordToMove.x != currentPosition.x && coordToMove.z == currentPosition.z) || (coordToMove.x == currentPosition.x && currentPosition.z != coordToMove.z))
-			    || ((coordToMove.x - currentPosition.x) == (coordToMove.z - currentPosition.z) || (coordToMove.x + coordToMove.z) == (currentPosition.x + currentPosition.z))){
-					selectedPiece.transform.position = coordToMove;
-					Debug.Log ("Animation_moving"); //Play animation(moving)
-					selectedPiece = null;
-				}
-				break;
-
-			case "King":
-				if(currentPosition == coordToMove){
-					break;
-				}else if(Mathf.Abs(coordToMove.x - currentPosition.x) <= 1 && Mathf.Abs(coordToMove.z - currentPosition.z) <= 1 
-			         && Mathf.Abs(coordToMove.z - currentPosition.z) >= 0 && Mathf.Abs(coordToMove.x - currentPosition.x) >= 0) {
-					selectedPiece.transform.position = coordToMove;
-					Debug.Log ("Animation_moving"); //Play animation(moving)
-					selectedPiece = null;
-				}
-				break;
-
-			case "Horse":
-				if(currentPosition == coordToMove){
-					break;
-				}else if(Mathf.Abs(coordToMove.x - currentPosition.x) == 2){
-					if(Mathf.Abs(coordToMove.z - currentPosition.z) == 1){
-						selectedPiece.transform.position = coordToMove;
-						Debug.Log ("Animation_moving"); //Play animation(moving)
-						selectedPiece = null;
-					}
-				}else if(Mathf.Abs(coordToMove.z - currentPosition.z) == 2){
-					if(Mathf.Abs(coordToMove.x - currentPosition.x) == 1){
-						selectedPiece.transform.position = coordToMove;
-						Debug.Log ("Animation_moving"); //Play animation(moving)
-						selectedPiece = null;
-					}
-				}	
-				break;
-		}						
+		}
+			
 	}
 
 	/*

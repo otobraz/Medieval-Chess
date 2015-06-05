@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 
 	void GetInput(){
 
-		Ray _ray;
+		Ray _ray;	
 		RaycastHit _hitInfo;
 
 		// On Left Click
@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour {
 			if(Physics.Raycast (_ray,out _hitInfo))
 			{
 				// Select the piece if the collider has a piece Tag
-				if(_hitInfo.collider.gameObject.tag == ("White"))
+				if(_hitInfo.collider.gameObject.tag == ("White") || _hitInfo.collider.gameObject.tag == ("Black"))
 				{
 					gameController.SelectedPiece(_hitInfo.collider.gameObject);
 				}else if(_hitInfo.collider.gameObject.tag == "Cube" && gameController.getSelectedPiece() != null){ //if the collider has a cube Tag && if a piece is selected, it moves the piece to the cube position
