@@ -3,17 +3,34 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
+	private string[][] gameBoard = new string[8][8];
 
 	private GameObject selectedPiece;
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start () {	
+		for (int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++){
+				gameBoard[i][j] = " ";
+			}
+		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public void initializeGameBoard(){
+		for (int i = 0; i < 8; i++) {
+			gameBoard[1][i] = "wP";
+			gameBoard[6][i] = "bP";
+		}
+	}
+
+
+	public void UpdateGameBoard(){
+
 	}
 
 	//Return the piece selected atm
