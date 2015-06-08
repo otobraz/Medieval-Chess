@@ -3,17 +3,17 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
-	private string[][] gameBoard = new string[8][8];
+	private string[,] gameBoard;
+
+	public GameObject blackPawn, blackRook, blackHorse, blackBishop, blackQueen, blackKing;
+
+	public GameObject whitePawn, whiteRook, whiteHorse, whiteBishop, whiteQueen, whiteKing;
 
 	private GameObject selectedPiece;
 
 	// Use this for initialization
 	void Start () {	
-		for (int i = 0; i < 8; i++) {
-			for(int j = 0; j < 8; j++){
-				gameBoard[i][j] = " ";
-			}
-		}
+		initializeGameBoard ();
 	}
 	
 	// Update is called once per frame
@@ -22,10 +22,29 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void initializeGameBoard(){
+		gameBoard = new string[8, 8];
 		for (int i = 0; i < 8; i++) {
-			gameBoard[1][i] = "wP";
-			gameBoard[6][i] = "bP";
+			gameBoard[1,i] = "wP";	Instantiate (whitePawn, new Vector3 (1, whitePawn.transform.position.y, i), Quaternion.identity);
+			gameBoard[6,i] = "bP";	Instantiate (blackPawn, new Vector3 (6, whitePawn.transform.position.y, i), Quaternion.identity);
 		}
+
+		gameBoard [0, 0] = "wR";	Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 0), Quaternion.identity);
+		gameBoard [0, 0] = "wH";	Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 1), Quaternion.identity);
+		gameBoard [0, 2] = "wB";	Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 2), Quaternion.identity);
+		gameBoard [0, 3] = "wQ";	Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 3), Quaternion.identity);
+		gameBoard [0, 4] = "wK";	Instantiate (whiteKing, new Vector3 (0, whiteKing.transform.position.y, 4), whiteKing.transform.rotation);
+		gameBoard [0, 5] = "wB";	Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 5), Quaternion.identity);
+		gameBoard [0, 6] = "wH";	Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 6), Quaternion.identity);
+		gameBoard [0, 7] = "wR";	Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 7), Quaternion.identity);
+
+		gameBoard [7, 0] = "bR";	Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 0), Quaternion.identity);
+		gameBoard [7, 1] = "bH";	Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 1), Quaternion.identity);
+		gameBoard [7, 2] = "bB";	Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 2), Quaternion.identity);
+		gameBoard [7, 3] = "bQ";	Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 3), Quaternion.identity);
+		gameBoard [7, 4] = "bK";	Instantiate (blackKing, new Vector3 (7, blackKing.transform.position.y, 4), blackKing.transform.rotation);
+		gameBoard [7, 5] = "bB";	Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 5), Quaternion.identity);
+		gameBoard [7, 6] = "bH";	Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), Quaternion.identity);
+		gameBoard [7, 7] = "bR";	Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 7), Quaternion.identity);
 	}
 
 

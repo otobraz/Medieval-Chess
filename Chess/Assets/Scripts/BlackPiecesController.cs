@@ -17,60 +17,60 @@ public class BlackPiecesController : MonoBehaviour {
 	public bool IsMoveValid(Vector3 coordToMove){
 		Vector3 currentPosition = gameObject.transform.position;
 		switch(gameObject.name){
-			case "BlackPawn":
+			case "BlackPawn(Clone)":
 				if(currentPosition == coordToMove){
 					return false;
-				}else if(currentPosition.x == coordToMove.x && (coordToMove.z - currentPosition.z) >= -2 && (coordToMove.z - currentPosition.z) < 0 && isFirstMove){
+				}else if(currentPosition.z == coordToMove.z && (coordToMove.x - currentPosition.x) >= -2 && (coordToMove.x - currentPosition.x) < 0 && isFirstMove){
 					isFirstMove = false;
 					return true;
-				}else if(currentPosition.x == coordToMove.x && (coordToMove.z - currentPosition.z) == -1){
+				}else if(currentPosition.z == coordToMove.z && (coordToMove.x - currentPosition.x) == -1){
 					return true;
 				}
 				break;
 				
-			case "BlackBishop":
+			case "BlackBishop(Clone)":
 				if(currentPosition == coordToMove){
 					return false;
-				}else if((coordToMove.x - currentPosition.x) == (coordToMove.z - currentPosition.z) || (coordToMove.x + coordToMove.z) == (currentPosition.x + currentPosition.z)){
+				}else if((coordToMove.z - currentPosition.z) == (coordToMove.x - currentPosition.x) || (coordToMove.z + coordToMove.x) == (currentPosition.z + currentPosition.x)){
 					return true;
 				}
 				break;
 				
-			case "BlackRook":
+			case "BlackRook(Clone)":
 				if(currentPosition == coordToMove){
 					return false;
-				}else if((coordToMove.x != currentPosition.x && coordToMove.z == currentPosition.z) || (coordToMove.x == currentPosition.x && currentPosition.z != coordToMove.z)){
+				}else if((coordToMove.z != currentPosition.z && coordToMove.x == currentPosition.x) || (coordToMove.z == currentPosition.z && currentPosition.x != coordToMove.x)){
 					return true;
 				}
 				break;
 				
-			case "BlackQueen":
+			case "BlackQueen(Clone)":
 				if(currentPosition == coordToMove){
 					return false;
-				}else if(((coordToMove.x != currentPosition.x && coordToMove.z == currentPosition.z) || (coordToMove.x == currentPosition.x && currentPosition.z != coordToMove.z))
-				         || ((coordToMove.x - currentPosition.x) == (coordToMove.z - currentPosition.z) || (coordToMove.x + coordToMove.z) == (currentPosition.x + currentPosition.z))){
+				}else if(((coordToMove.z != currentPosition.z && coordToMove.x == currentPosition.x) || (coordToMove.z == currentPosition.z && currentPosition.x != coordToMove.x))
+				         || ((coordToMove.z - currentPosition.z) == (coordToMove.x - currentPosition.x) || (coordToMove.z + coordToMove.x) == (currentPosition.z + currentPosition.x))){
 					return true;
 				}
 				break;
 				
-			case "BlackKing":
+			case "BlackKing(Clone)":
 				if(currentPosition == coordToMove){
 					return false;
-				}else if(Mathf.Abs(coordToMove.x - currentPosition.x) <= 1 && Mathf.Abs(coordToMove.z - currentPosition.z) <= 1 
-				         && Mathf.Abs(coordToMove.z - currentPosition.z) >= 0 && Mathf.Abs(coordToMove.x - currentPosition.x) >= 0) {
+				}else if(Mathf.Abs(coordToMove.z - currentPosition.z) <= 1 && Mathf.Abs(coordToMove.x - currentPosition.x) <= 1 
+				         && Mathf.Abs(coordToMove.x - currentPosition.x) >= 0 && Mathf.Abs(coordToMove.z - currentPosition.z) >= 0) {
 					return true;
 				}
 				break;
 				
-			case "BlackHorse":
+			case "BlackHorse(Clone)":
 				if(currentPosition == coordToMove){
 					return false;
-				}else if(Mathf.Abs(coordToMove.x - currentPosition.x) == 2){
-					if(Mathf.Abs(coordToMove.z - currentPosition.z) == 1){
-						return true;
-					}
 				}else if(Mathf.Abs(coordToMove.z - currentPosition.z) == 2){
 					if(Mathf.Abs(coordToMove.x - currentPosition.x) == 1){
+						return true;
+					}
+				}else if(Mathf.Abs(coordToMove.x - currentPosition.x) == 2){
+					if(Mathf.Abs(coordToMove.z - currentPosition.z) == 1){
 						return true;
 					}
 				}	
