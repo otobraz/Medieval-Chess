@@ -5,7 +5,7 @@ public class PlayerController : MonoBehaviour {
 
 	private Camera camera;
 	private GameController gameController;
-
+	
 	// Use this for initialization
 	void Start () {
 		camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the Camera's GameObject from its tag 
@@ -25,23 +25,34 @@ public class PlayerController : MonoBehaviour {
 		Ray _ray;	
 		RaycastHit _hitInfo;
 
-		// On Left Click
-		if(Input.GetMouseButtonDown(0))
-		{
-			_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click
-			
-			// Raycast and verify that it collided
-			if(Physics.Raycast (_ray,out _hitInfo))
-			{
-				// Select the piece if the collider has a piece Tag
-				if(_hitInfo.collider.gameObject.tag == ("White") || _hitInfo.collider.gameObject.tag == ("Black"))
-				{
-					gameController.SelectedPiece(_hitInfo.collider.gameObject);
-				}else if(_hitInfo.collider.gameObject.tag == "Cube" && gameController.getSelectedPiece() != null){ //if the collider has a cube Tag && if a piece is selected, it moves the piece to the cube position
-					Vector3 selectedCoord = new Vector3(_hitInfo.collider.gameObject.transform.position.x, 0.8f, _hitInfo.collider.gameObject.transform.position.z); //get the position of the click.
-					gameController.MovePiece(selectedCoord);
+		if (gameController.getGameState() == 0) {
+			// On Left Click
+			if(Input.GetMouseButtonDown(0))	{
+				_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click	
+				if(Physics.Raycast (_ray,out _hitInfo)){ 	// Raycast and verify that it collided
+					if(_hitInfo.collider.gameObject.tag == ("White")){ // Select the piece if the collider has a piece Tag
+						gameController.SelectedPiece(_hitInfo.collider.gameObject);
+					}else if((_hitInfo.collider.gameObject.tag == "Cube" || _hitInfo.collider.gameObject.tag == "Black") && gameController.getSelectedPiece() != null){ //if the collider has a cube Tag && if a piece is selected, it moves the piece to the cube position
+						Vector3 selectedCoord = new Vector3(_hitInfo.collider.gameObject.transform.position.x, 0.8f, _hitInfo.collider.gameObject.transform.position.z); //get the position of the click.
+						gameController.MovePiece(selectedCoord);
+						gameController.setGameState (1);
+					}
+				}
+			}
+		}else if(gameController.getGameState() == 1){
+			if(Input.GetMouseButtonDown(0))	{
+				_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click	
+				if(Physics.Raycast (_ray,out _hitInfo)){ // Raycast and verify that it collided
+					if(_hitInfo.collider.gameObject.tag == ("Black")){ // Select the piece if the collider has a piece Tag
+						gameController.SelectedPiece(_hitInfo.collider.gameObject);
+					}else if((_hitInfo.collider.gameObject.tag == "Cube" || _hitInfo.collider.gameObject.tag == "White") && gameController.getSelectedPiece() != null){ //if the collider has a cube Tag && if a piece is selected, it moves the piece to the cube position
+						Vector3 selectedCoord = new Vector3(_hitInfo.collider.gameObject.transform.position.x, 0.8f, _hitInfo.collider.gameObject.transform.position.z); //get the position of the click.
+						gameController.MovePiece(selectedCoord);
+						gameController.setGameState (0);
+					}
 				}
 			}
 		}
+
 	}
 }

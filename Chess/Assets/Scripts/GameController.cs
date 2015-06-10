@@ -1,19 +1,31 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
+	private int gameState;
+
 	private int[,] gameBoard;
+
+	private GameObject selectedPiece;
 
 	public GameObject blackPawn, blackRook, blackHorse, blackBishop, blackQueen, blackKing;
 
 	public GameObject whitePawn, whiteRook, whiteHorse, whiteBishop, whiteQueen, whiteKing;
 
-	private GameObject selectedPiece;
+	private List<GameObject> whitePieces = new List<GameObject>();
+	private List<GameObject> blackPieces = new List<GameObject>();
 
-	// Use this for initialization
+	private List<GameObject> whiteCapturedPieces = new List<GameObject>();
+	private List<GameObject> blackCapturedPieces = new List<GameObject>();
+
+
+
+	//  Use this for initialization
 	void Start () {	
 		initializeGameBoard ();
+		setGameState (0);
 	}
 	
 	// Update is called once per frame
@@ -21,11 +33,18 @@ public class GameController : MonoBehaviour {
 	
 	}
 
+	public int getGameState(){
+		return gameState;
+	}
+
+	public void setGameState(int nGS){
+		gameState = nGS;
+	}
 	public void initializeGameBoard(){
 		gameBoard = new int[8, 8];
 		for (int i = 0; i < 8; i++) {
-			gameBoard[1,i] = 1;	Instantiate (whitePawn, new Vector3 (1, whitePawn.transform.position.y, i), Quaternion.identity);
-			gameBoard[6,i] = 2;	Instantiate (blackPawn, new Vector3 (6, whitePawn.transform.position.y, i), Quaternion.identity);
+			gameBoard[1,i] = 1;	whitePieces.Add((GameObject)Instantiate (whitePawn, new Vector3 (1, whitePawn.transform.position.y, i), Quaternion.identity));
+			gameBoard[6,i] = 2;	blackPieces.Add((GameObject)Instantiate (blackPawn, new Vector3 (6, whitePawn.transform.position.y, i), Quaternion.identity));
 			gameBoard[0,i] = 1;
 			gameBoard[7,i] = 2;
 		}
@@ -48,23 +67,23 @@ public class GameController : MonoBehaviour {
 		gameBoard [7, 6] = "bH";	Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), Quaternion.identity);
 		gameBoard [7, 7] = "bR";	Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 7), Quaternion.identity);*/
 
-		Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 0), Quaternion.identity);
-		Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 1), Quaternion.identity);
-		Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 2), Quaternion.identity);
-		Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 3), Quaternion.identity);
-		Instantiate (whiteKing, new Vector3 (0, whiteKing.transform.position.y, 4), whiteKing.transform.rotation);
-		Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 5), Quaternion.identity);
-		Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 6), Quaternion.identity);
-		Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 7), Quaternion.identity);
+		whitePieces.Add((GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 0), Quaternion.identity));
+        whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 1), Quaternion.identity));
+        whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 2), Quaternion.identity));
+        whitePieces.Add((GameObject)Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 3), Quaternion.identity));
+        whitePieces.Add((GameObject)Instantiate (whiteKing, new Vector3 (0, whiteKing.transform.position.y, 4), whiteKing.transform.rotation));
+        whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 5), Quaternion.identity));
+        whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 6), Quaternion.identity));
+        whitePieces.Add((GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 7), Quaternion.identity));
 		
-		Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 0), Quaternion.identity);
-		Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 1), Quaternion.identity);
-		Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 2), Quaternion.identity);
-		Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 3), Quaternion.identity);
-		Instantiate (blackKing, new Vector3 (7, blackKing.transform.position.y, 4), blackKing.transform.rotation);
-		Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 5), Quaternion.identity);
-		Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), Quaternion.identity);
-		Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 7), Quaternion.identity);
+		blackPieces.Add((GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 0), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 1), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 2), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 3), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackKing, new Vector3 (7, blackKing.transform.position.y, 4), blackKing.transform.rotation));
+		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 5), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 7), Quaternion.identity));
 
 	}
 
@@ -105,9 +124,19 @@ public class GameController : MonoBehaviour {
 						case 2:
 							gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
 							gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 1;
-							selectedPiece.transform.position = coordToMove;
 							Debug.Log ("Animation_moving"); //Play animation(moving)
 							Debug.Log ("Animation_eating"); //Play animation(eating)
+							int index = 0; 
+							selectedPiece.transform.position = coordToMove;
+							foreach(GameObject gO in blackPieces){
+								if(gO.transform.position.x == coordToMove.x && gO.transform.position.z == coordToMove.z){
+									blackCapturedPieces.Add(gO);
+									Destroy (gO);
+									index = blackPieces.IndexOf(gO);
+									break;
+								}
+							}
+							blackPieces.RemoveAt(index);
 							selectedPiece = null;
 							break;
 					}
@@ -128,9 +157,19 @@ public class GameController : MonoBehaviour {
 						case 1:
 							gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
 							gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 2;
-							selectedPiece.transform.position = coordToMove;
 							Debug.Log ("Animation_moving"); //Play animation(moving)
 							Debug.Log ("Animation_eating"); //Play animation(eating)
+							int index = 0; 
+							selectedPiece.transform.position = coordToMove;
+							foreach(GameObject gO in whitePieces){
+								if(gO.transform.position.x == coordToMove.x && gO.transform.position.z == coordToMove.z){
+									whiteCapturedPieces.Add(gO);
+									Destroy (gO);
+									index = whitePieces.IndexOf(gO);
+									break;
+								}
+							}
+							whitePieces.RemoveAt(index);
 							selectedPiece = null;
 							break;
 
