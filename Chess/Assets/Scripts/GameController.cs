@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class GameController : MonoBehaviour {
 
-	private int gameState;
+	private int gameState, nBlackCaptured, nWhiteCaptured;
 
 	private int[,] gameBoard;
 
@@ -17,8 +18,7 @@ public class GameController : MonoBehaviour {
 	private List<GameObject> whitePieces = new List<GameObject>();
 	private List<GameObject> blackPieces = new List<GameObject>();
 
-	private List<GameObject> whiteCapturedPieces = new List<GameObject>();
-	private List<GameObject> blackCapturedPieces = new List<GameObject>();
+	private List<Vector3> possibleMovements = new List<Vector3> ();
 
 
 
@@ -26,11 +26,339 @@ public class GameController : MonoBehaviour {
 	void Start () {	
 		initializeGameBoard ();
 		setGameState (0);
+		nBlackCaptured = 0;
+		nWhiteCaptured = 0;
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	public void CheckPawnMovements(GameObject sPiece, int x, int z){
+		switch (sPiece.tag) {
+		case "White":
+			if(x+1 < 8  && gameBoard[x+1, z] != 1){
+				possibleMovements.Add(new Vector3(x+1, sPiece.transform.position.y, z));
+				if(x == 1){
+					if(gameBoard[x+2, z] != 1){
+						possibleMovements.Add(new Vector3(x+2, sPiece.transform.position.y, z));
+					}
+				}
+				if(z+1 < 8 && gameBoard[x+1, z+1] == 2){
+					possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z+1));
+				}
+				if(z-1 >= 0 && gameBoard[x+1, z-1] == 2){
+					possibleMovements.Add(new Vector3(x+1, sPiece.transform.position.y, z-1));
+				}
+			}
+			break;
+			
+		case "Black":
+			if(x-1 >=0 && gameBoard[x-1, z] != 2){
+				possibleMovements.Add(new Vector3(x-1, sPiece.transform.position.y, z));
+				if(x == 6){
+					if(gameBoard[x-2, z] != 2){
+						possibleMovements.Add(new Vector3(x-2, sPiece.transform.position.y, z));
+					}
+				}
+				if(z+1 < 8 && gameBoard[x-1, z+1] == 1){
+					possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z+1));
+				}
+				if(z-1 >= 0 && gameBoard[x-1, z-1] == 1){
+					possibleMovements.Add(new Vector3(x-1, sPiece.transform.position.y, z-1));
+				}
+			}
+			break;
+		}
+	}
+
+	public void CheckBishopMovements(GameObject sPiece, int x, int z){
+		switch(sPiece.tag){
+			case "White":
+				for(int i = x+1, j = 1; i < 8 && z+j < 8; i++, j++){
+					if(gameBoard[i, z+j] != 1){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z+j));
+					}else{
+						break;
+					}
+				}
+				for(int i = x+1, j = 1; i < 8 && z-j >= 0; i++, j++){
+					if(gameBoard[i, z-j] != 1){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z-j));
+					}else{
+						break;
+					}
+				}
+				for(int i = x-1, j = 1; i >= 0 && z+j < 8; i--, j++){
+					if(gameBoard[i, z+j] != 1){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z+j));
+					}else{
+						break;
+					}
+				}
+				for(int i = x-1, j = 1; i >= 0 && z-j >= 0; i--, j++){
+					if(gameBoard[i, z-j] != 1){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z-j));	  
+					}else{
+						break;
+					}
+				}
+				break;
+			case "Black":
+				for(int i = x+1, j = 1; i < 8 && z+j < 8; i++, j++){
+					if(gameBoard[i, z+j] != 2){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z+j));
+					}else{
+						break;
+					}
+				}
+				for(int i = x+1, j = 1; i < 8 && z-j >= 0; i++, j++){
+					if(gameBoard[i, z-j] != 2){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z-j));
+					}else{
+						break;
+					}
+				}
+				for(int i = x-1, j = 1; i >= 0 && z+j < 8; i--, j++){
+					if(gameBoard[i, z+j] != 2){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z+j));
+					}else{
+						break;
+					}
+				}
+				for(int i = x-1, j = 1; i >= 0 && z-j >= 0; i--, j++){
+					if(gameBoard[i, z-j] != 2){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z-j));	  
+					}else{
+						break;
+					}
+				}
+				break;
+		}
+	}
+
+	public void CheckRookMovements(GameObject sPiece, int x, int z){
+		switch(sPiece.tag){
+			case "White":
+				for(int i = x+1; i < 8; i++){
+					if(gameBoard[i, z] != 1){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z));
+					}else{
+						break;
+					}
+				}
+				for(int i = x-1; i >= 0; i--){
+					if(gameBoard[i, z] != 1){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z));
+					}else{
+						break;
+					}
+				}
+				for(int j = z+1; j < 8; j++){
+					if(gameBoard[x, j] != 1){
+						possibleMovements.Add(new Vector3(x, sPiece.transform.position.y, j));
+					}else{
+						break;
+					}
+				}
+				for(int j = z-1; j >= 0; j--){
+					if(gameBoard[x, j] != 1){
+						possibleMovements.Add(new Vector3(x, sPiece.transform.position.y, j));	  
+					}else{
+						break;
+					}
+				}
+				break;
+			case "Black":
+				for(int i = x+1; i < 8; i++){
+					if(gameBoard[i, z] != 2){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z));
+					}else{
+						break;
+					}
+				}
+				for(int i = x-1; i >= 0; i--){
+					if(gameBoard[i, z] != 2){
+						possibleMovements.Add(new Vector3(i, sPiece.transform.position.y, z));
+					}else{
+						break;
+					}
+				}
+				for(int j = z+1; j < 8; j++){
+					if(gameBoard[x, j] != 2){
+						possibleMovements.Add(new Vector3(x, sPiece.transform.position.y, j));
+					}else{
+						break;
+					}
+				}
+				for(int j = z-1; j >= 0; j--){
+					if(gameBoard[x, j] != 2){
+						possibleMovements.Add(new Vector3(x, sPiece.transform.position.y, j));	  
+					}else{
+						break;
+					}
+				}
+				break;
+			}
+	}
+
+	public void CheckKingMovements(GameObject sPiece, int x, int z){
+		if (sPiece.tag == "White") {
+			if(z+1 < 8 && gameBoard[x, z+1] != 1){
+				possibleMovements.Add (new Vector3(x, sPiece.transform.position.y, z+1));
+			}
+			if(x+1 < 8 && z+1 < 8 && gameBoard[x+1, z+1] != 1){
+				possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z+1));
+			}
+			if(z-1 >=0 && gameBoard[x, z-1] != 1){
+				possibleMovements.Add (new Vector3(x, sPiece.transform.position.y, z-1));
+			}
+			if(z-1 >= 0 && x-1 >= 0 && gameBoard[x-1, z-1] != 1){
+				possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z-1));
+			}
+			if(x+1 < 8 && gameBoard[x+1, z] != 1){
+				possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z));
+			}
+			if(x-1 >= 0 && gameBoard[x-1, z] != 1){
+				possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z));
+			}
+			if(x-1 >= 0 && z+1 < 8 && gameBoard[x-1, z+1] != 1){
+				possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z+1));
+			}
+			if(x+1 < 8 && z-1 >= 0 && gameBoard[x+1, z-1] != 1){
+				possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z-1));
+			}
+		}else if(sPiece.tag == "Black"){
+			if(z+1 < 8 && gameBoard[x, z+1] != 2){
+				possibleMovements.Add (new Vector3(x, sPiece.transform.position.y, z+1));
+			}
+			if(x+1 < 8 && z+1 < 8 && gameBoard[x+1, z+1] != 2){
+				possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z+1));
+			}
+			if(z-1 >=0 && gameBoard[x, z-1] != 2){
+				possibleMovements.Add (new Vector3(x, sPiece.transform.position.y, z-1));
+			}
+			if(z-1 >= 0 && x-1 >= 0 && gameBoard[x-1, z-1] != 2){
+				possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z-1));
+			}
+			if(x+1 < 8 && gameBoard[x+1, z] != 2){
+				possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z));
+			}
+			if(x-1 >= 0 && gameBoard[x-1, z] != 2){
+				possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z));
+			}
+			if(x-1 >= 0 && z+1 < 8 && gameBoard[x-1, z+1] != 2){
+				possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z+1));
+			}
+			if(x+1 < 8 && z-1 >= 0 && gameBoard[x+1, z-1] != 2){
+				possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z-1));
+			}
+		}	
+	}
+
+	public void CheckHorseMovements(GameObject sPiece, int x, int z){
+		if (sPiece.tag == "White") {
+			if(x+2 < 8){
+				if( z+1 < 8 && gameBoard[x+2, z+1] != 1){
+					possibleMovements.Add (new Vector3(x+2, sPiece.transform.position.y, z+1));          
+				}
+				if(z-1 >= 0 && gameBoard[x+2, z-1] != 1){
+					possibleMovements.Add (new Vector3(x+2, sPiece.transform.position.y, z-1));
+				}
+			}
+			if(x-2 >= 0){
+				if(z+1 < 8 && gameBoard[x-2, z+1] != 1){
+					possibleMovements.Add (new Vector3(x-2, sPiece.transform.position.y, z+1));          
+				}
+				if(z-1 >= 0 && gameBoard[x-2, z-1] != 1){
+					possibleMovements.Add (new Vector3(x-2, sPiece.transform.position.y, z-1));
+				}
+			}
+			if(z+2 < 8){
+				if(x+1 < 8 && gameBoard[x+1, z+2] != 1){
+					possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z+2));          
+				}
+				if(x-1 >= 0 && gameBoard[x-1, z+2] != 1){
+					possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z+2));
+				}
+			}
+			if(z-2 >= 0){
+				if(x+1 < 8 && gameBoard[x+1, z-2] != 1){
+					possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z-2));          
+				}
+				if(x-1 >= 0 && gameBoard[x-1, z-2] != 1){
+					possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z-2));
+				}
+			}
+		}else if(sPiece.tag == "Black"){
+			if(x+2 < 8){
+				if(z+1 < 8 && gameBoard[x+2, z+1] != 2){
+					possibleMovements.Add (new Vector3(x+2, sPiece.transform.position.y, z+1));          
+				}
+				if(z-1 >= 0 && gameBoard[x+2, z-1] != 2){
+					possibleMovements.Add (new Vector3(x+2, sPiece.transform.position.y, z-1));
+				}
+			}
+			if(x-2 >= 0){
+				if(z+1 < 8 && gameBoard[x-2, z+1] != 2){
+					possibleMovements.Add (new Vector3(x-2, sPiece.transform.position.y, z+1));          
+				}
+				if(z-1 >= 0 && gameBoard[x-2, z-1] != 2){
+					possibleMovements.Add (new Vector3(x-2, sPiece.transform.position.y, z-1));
+				}
+			}
+			if(z+2 < 8){
+				if(x+1 < 8 && gameBoard[x+1, z+2] != 2){
+					possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z+2));          
+				}
+				if(x-1 >= 0 && gameBoard[x-1, z+2] != 2){
+					possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z+2));
+				}
+			}
+			if(z-2 >= 0){
+				if(x+1 < 8 && gameBoard[x+1, z-2] != 2){
+					possibleMovements.Add (new Vector3(x+1, sPiece.transform.position.y, z-2));          
+				}
+				if(x-1 >= 0 && gameBoard[x-1, z-2] != 2){
+					possibleMovements.Add (new Vector3(x-1, sPiece.transform.position.y, z-2));
+				}
+			}
+		}	
+	}
+
+	public void CheckPossibleMovements(GameObject sPiece){
+		int x = (int)sPiece.transform.position.x;
+		int z = (int)sPiece.transform.position.z;
+
+		if(sPiece.name == "WhitePawn(Clone)" || sPiece.name == "BlackPawn(Clone)"){
+			CheckPawnMovements(sPiece, x, z);
+		}
+
+		if(sPiece.name == "WhiteBishop(Clone)" || sPiece.name == "BlackBishop(Clone)"){
+			CheckBishopMovements(sPiece, x, z);
+		}
+
+		if(sPiece.name == "WhiteRook(Clone)" || sPiece.name == "BlackRook(Clone)"){
+			CheckRookMovements(sPiece, x, z);
+		}
+				
+		if (sPiece.name == "WhiteQueen(Clone)" || sPiece.name == "BlackQueen(Clone)") {
+			CheckBishopMovements(sPiece, x, z);
+			CheckRookMovements(sPiece, x, z);
+		}
+				
+		if (sPiece.name == "WhiteKing(Clone)" || sPiece.name == "BlackKing(Clone)") {
+			CheckKingMovements(sPiece, x, z);
+		}
+
+		if (sPiece.name == "WhiteHorse(Clone)" || sPiece.name == "BlackHorse(Clone)") {
+			CheckHorseMovements(sPiece, x, z);
+		}
+
+		foreach(Vector3 v in  possibleMovements){
+			Debug.Log(v);
+		}
 	}
 
 	public int getGameState(){
@@ -93,13 +421,15 @@ public class GameController : MonoBehaviour {
 	}
 
 	//Select the piece
-	public void SelectedPiece(GameObject piece){
+	public void SelectPiece(GameObject piece){
 
 		if (getSelectedPiece()) {
 			Debug.Log("Animation_Selection"); //Play animation(selection)
 
 		}
+		possibleMovements.Clear();
 		selectedPiece = piece;
+		CheckPossibleMovements (piece);
 		Debug.Log (selectedPiece.name + " is selected");
 	}
 	
@@ -108,114 +438,81 @@ public class GameController : MonoBehaviour {
 		switch(getSelectedPiece().tag){
 			case "White":
 				WhitePiecesController whitePieceController = selectedPiece.GetComponent<WhitePiecesController> ();
-				if(whitePieceController.IsMoveValid(coordToMove)){
-					switch(gameBoard[(int)coordToMove.x, (int)coordToMove.z]){
-						case 0:
-							gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
-							gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 1;
-							selectedPiece.transform.position = coordToMove;
-							Debug.Log ("Animation_moving"); //Play animation(moving)
-							selectedPiece = null;
-							break;
-
-						case 1:
-							break;
-
-						case 2:
-							gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
-							gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 1;
-							Debug.Log ("Animation_moving"); //Play animation(moving)
-							Debug.Log ("Animation_eating"); //Play animation(eating)
-							int index = 0; 
-							selectedPiece.transform.position = coordToMove;
-							foreach(GameObject gO in blackPieces){
-								if(gO.transform.position.x == coordToMove.x && gO.transform.position.z == coordToMove.z){
-									blackCapturedPieces.Add(gO);
-									Destroy (gO);
-									index = blackPieces.IndexOf(gO);
+					foreach(Vector3 v3 in possibleMovements){
+						if(v3.x == coordToMove.x && v3.z == coordToMove.z){
+							switch(gameBoard[(int)coordToMove.x, (int)coordToMove.z]){
+								case 0:
+									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
+									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 1;
+									selectedPiece.transform.position = coordToMove;
+									Debug.Log ("Animation_moving"); //Play animation(moving)
+									selectedPiece = null;
 									break;
-								}
+
+								case 2:
+									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
+									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 1;
+									Debug.Log ("Animation_moving"); //Play animation(moving)
+									Debug.Log ("Animation_eating"); //Play animation(eating)
+									int index = 0; 
+									selectedPiece.transform.position = coordToMove;
+									foreach(GameObject gO in blackPieces){
+										if(gO.transform.position.x == coordToMove.x && gO.transform.position.z == coordToMove.z){
+											if(nBlackCaptured < 8)
+												gO.transform.position = new Vector3(nBlackCaptured, gO.transform.position.y, -1.5f);
+											else
+												gO.transform.position = new Vector3(nBlackCaptured-8, gO.transform.position.y, -2.75f);
+											nBlackCaptured++;
+											index = blackPieces.IndexOf(gO);
+											break;
+										}
+									}
+									blackPieces.RemoveAt(index);
+									selectedPiece = null;
+									break;
 							}
-							blackPieces.RemoveAt(index);
-							selectedPiece = null;
-							break;
+							setGameState(1);
+						}
 					}
-				}
-				break;
+					break;
 			case "Black":	
 				BlackPiecesController blackPieceController = selectedPiece.GetComponent<BlackPiecesController> ();
-				if(blackPieceController.IsMoveValid(coordToMove)){
-					switch(gameBoard[(int)coordToMove.x, (int)coordToMove.z]){
-						case 0:
-							gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
-							gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 2;
-							selectedPiece.transform.position = coordToMove;
-							Debug.Log ("Animation_moving"); //Play animation(moving)
-							selectedPiece = null;
-							break;
-
-						case 1:
-							gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
-							gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 2;
-							Debug.Log ("Animation_moving"); //Play animation(moving)
-							Debug.Log ("Animation_eating"); //Play animation(eating)
-							int index = 0; 
-							selectedPiece.transform.position = coordToMove;
-							foreach(GameObject gO in whitePieces){
-								if(gO.transform.position.x == coordToMove.x && gO.transform.position.z == coordToMove.z){
-									whiteCapturedPieces.Add(gO);
-									Destroy (gO);
-									index = whitePieces.IndexOf(gO);
-									break;
+				foreach(Vector3 v3 in possibleMovements){
+					if(v3.x == coordToMove.x && v3.z == coordToMove.z){
+						switch(gameBoard[(int)coordToMove.x, (int)coordToMove.z]){
+							case 0:
+								gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
+								gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 2;
+								selectedPiece.transform.position = coordToMove;
+								Debug.Log ("Animation_moving"); //Play animation(moving)
+								selectedPiece = null;
+								break;
+								
+							case 1:
+								gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
+								gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 2;
+								Debug.Log ("Animation_moving"); //Play animation(moving)
+								Debug.Log ("Animation_eating"); //Play animation(eating)
+								int index = 0; 
+								selectedPiece.transform.position = coordToMove;
+								foreach(GameObject gO in whitePieces){
+									if(gO.transform.position.x == coordToMove.x && gO.transform.position.z == coordToMove.z){
+										if(nWhiteCaptured < 8)
+											gO.transform.position = new Vector3(7 - nWhiteCaptured, gO.transform.position.y, 8.5f);
+										else
+											gO.transform.position = new Vector3(15 - nWhiteCaptured, gO.transform.position.y, 9.75f);
+										nWhiteCaptured++;
+										index = whitePieces.IndexOf(gO);									
+									}
 								}
-							}
-							whitePieces.RemoveAt(index);
-							selectedPiece = null;
-							break;
-
-						case 2:
-							break;
+								whitePieces.RemoveAt(index);
+								selectedPiece = null;
+								break;
+						}
+						setGameState(0);
 					}
 				}
 				break;
 		}
-			
 	}
-
-	/*
-	// for example, this would go on the tile to handle snapping for initial placement:
-	// you need to have a reference of the unit being placed
-	void OnMouseOver()
-	{
-		if (tileIsPasable)
-		{
-			Unit.GetComponent<unitScript>().snapping = true;
-			Unit.transform.position = this.transform.position;
-		}
-	}
-	void OnMouseExit()
-	{
-		if (tileIsPasable)
-		{
-			Unit.GetComponent<unitScript>().snapping = false;
-		}
-	}
-	void OnMouseDown()
-	{
-		if (tileIsPasable)
-		{
-			Unit.GetComponent<unitScript>().snapping = true;
-			Unit.transform.position = this.transform.position;
-			Unit.GetComponent<unitScript>().state = UnitScript.State.idle;  
-		}
-	}
-	
-	// then this bit would be on the unit, 
-	//it attaches the unit to the mouse when it is not being snapped to he grid
-	if(snapping == false){
-		Vector3 screenPos = Input.mousePosition;
-		screenPos.z = 40f;
-		Vector3 worldPos = Camera.mainCamera.ScreenToWorldPoint(screenPos);
-		transform.position = worldPos;
-	}*/
 }

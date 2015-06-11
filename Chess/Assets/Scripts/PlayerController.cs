@@ -31,11 +31,10 @@ public class PlayerController : MonoBehaviour {
 				_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click	
 				if(Physics.Raycast (_ray,out _hitInfo)){ 	// Raycast and verify that it collided
 					if(_hitInfo.collider.gameObject.tag == ("White")){ // Select the piece if the collider has a piece Tag
-						gameController.SelectedPiece(_hitInfo.collider.gameObject);
+						gameController.SelectPiece(_hitInfo.collider.gameObject);
 					}else if((_hitInfo.collider.gameObject.tag == "Cube" || _hitInfo.collider.gameObject.tag == "Black") && gameController.getSelectedPiece() != null){ //if the collider has a cube Tag && if a piece is selected, it moves the piece to the cube position
 						Vector3 selectedCoord = new Vector3(_hitInfo.collider.gameObject.transform.position.x, 0.8f, _hitInfo.collider.gameObject.transform.position.z); //get the position of the click.
 						gameController.MovePiece(selectedCoord);
-						gameController.setGameState (1);
 					}
 				}
 			}
@@ -44,11 +43,10 @@ public class PlayerController : MonoBehaviour {
 				_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click	
 				if(Physics.Raycast (_ray,out _hitInfo)){ // Raycast and verify that it collided
 					if(_hitInfo.collider.gameObject.tag == ("Black")){ // Select the piece if the collider has a piece Tag
-						gameController.SelectedPiece(_hitInfo.collider.gameObject);
+						gameController.SelectPiece(_hitInfo.collider.gameObject);
 					}else if((_hitInfo.collider.gameObject.tag == "Cube" || _hitInfo.collider.gameObject.tag == "White") && gameController.getSelectedPiece() != null){ //if the collider has a cube Tag && if a piece is selected, it moves the piece to the cube position
 						Vector3 selectedCoord = new Vector3(_hitInfo.collider.gameObject.transform.position.x, 0.8f, _hitInfo.collider.gameObject.transform.position.z); //get the position of the click.
 						gameController.MovePiece(selectedCoord);
-						gameController.setGameState (0);
 					}
 				}
 			}
