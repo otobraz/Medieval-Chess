@@ -18,7 +18,7 @@ public class BlackPiecesController : MonoBehaviour {
 		Vector3 currentPosition = gameObject.transform.position;
 		switch(gameObject.name){
 			case "BlackPawn(Clone)":
-				if(currentPosition == coordToMove){
+				if(currentPosition == coordToMove ){
 					return false;
 				}else if(currentPosition.z == coordToMove.z && (coordToMove.x - currentPosition.x) >= -2 && (coordToMove.x - currentPosition.x) < 0 && isFirstMove){
 					isFirstMove = false;

@@ -5,7 +5,7 @@ using System;
 
 public class GameController : MonoBehaviour {
 
-	private int gameState, nBlackCaptured, nWhiteCaptured;
+	private int gameState, nBlackCaptured, nWhiteCaptured, nThreats;
 
 	private int[,] gameBoard;
 
@@ -15,10 +15,14 @@ public class GameController : MonoBehaviour {
 
 	public GameObject whitePawn, whiteRook, whiteHorse, whiteBishop, whiteQueen, whiteKing;
 
+	private Vector3 whiteKingPosition, blackKingPosition;
+
 	private List<GameObject> whitePieces = new List<GameObject>();
 	private List<GameObject> blackPieces = new List<GameObject>();
 
 	private List<Vector3> possibleMovements = new List<Vector3> ();
+
+	private bool isCheck;
 
 
 
@@ -28,6 +32,8 @@ public class GameController : MonoBehaviour {
 		setGameState (0);
 		nBlackCaptured = 0;
 		nWhiteCaptured = 0;
+		nThreats = 0;
+		isCheck = false;
 	}
 	
 	// Update is called once per frame
@@ -39,10 +45,12 @@ public class GameController : MonoBehaviour {
 		switch (sPiece.tag) {
 		case "White":
 			if(x+1 < 8  && gameBoard[x+1, z] != 1){
-				possibleMovements.Add(new Vector3(x+1, sPiece.transform.position.y, z));
-				if(x == 1){
-					if(gameBoard[x+2, z] != 1){
-						possibleMovements.Add(new Vector3(x+2, sPiece.transform.position.y, z));
+				if(gameBoard[x+1, z] == 0){
+					possibleMovements.Add(new Vector3(x+1, sPiece.transform.position.y, z));
+					if(x == 1){
+						if(gameBoard[x+2, z] != 1){
+							possibleMovements.Add(new Vector3(x+2, sPiece.transform.position.y, z));
+						}
 					}
 				}
 				if(z+1 < 8 && gameBoard[x+1, z+1] == 2){
@@ -356,9 +364,51 @@ public class GameController : MonoBehaviour {
 			CheckHorseMovements(sPiece, x, z);
 		}
 
-		foreach(Vector3 v in  possibleMovements){
+		/*foreach(Vector3 v in  possibleMovements){
 			Debug.Log(v);
+		}*/
+	}
+
+	public void CheckCheck(string tag){
+		possibleMovements.Clear ();
+		nThreats = 0;
+		switch(tag){
+			case "White":
+				Debug.Log(blackKingPosition);
+				foreach(GameObject piece in whitePieces){
+					CheckPossibleMovements(piece);
+				}
+				foreach(Vector3 v3 in possibleMovements){
+					if(v3.x == blackKingPosition.x && v3.z == blackKingPosition.z){
+						isCheck = true;
+						nThreats++;
+					}
+				}
+				break;
+			case "Black":
+				foreach(GameObject piece in blackPieces){
+					CheckPossibleMovements(piece);
+					if(piece.name == "BlackQueen(Clone)"){
+						Debug.Log (piece.transform.position);
+					}
+				}
+				foreach(Vector3 v3 in possibleMovements){
+					if(v3.x == whiteKingPosition.x && v3.z == whiteKingPosition.z){
+						isCheck = true;
+						nThreats++;
+					}
+				}
+				break;
 		}
+	}
+
+	public void CheckMate(){
+		if (nThreats == 1) {
+
+		}else if(nThreats > 1){
+			
+		}
+
 	}
 
 	public int getGameState(){
@@ -400,6 +450,7 @@ public class GameController : MonoBehaviour {
         whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 2), Quaternion.identity));
         whitePieces.Add((GameObject)Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 3), Quaternion.identity));
         whitePieces.Add((GameObject)Instantiate (whiteKing, new Vector3 (0, whiteKing.transform.position.y, 4), whiteKing.transform.rotation));
+		whiteKingPosition = new Vector3 (0, whiteKing.transform.position.y, 4);
         whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 5), Quaternion.identity));
         whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 6), Quaternion.identity));
         whitePieces.Add((GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 7), Quaternion.identity));
@@ -409,6 +460,7 @@ public class GameController : MonoBehaviour {
 		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 2), Quaternion.identity));
 		blackPieces.Add((GameObject)Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 3), Quaternion.identity));
 		blackPieces.Add((GameObject)Instantiate (blackKing, new Vector3 (7, blackKing.transform.position.y, 4), blackKing.transform.rotation));
+		blackKingPosition = new Vector3(7, blackKing.transform.position.y, 4);
 		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 5), Quaternion.identity));
 		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), Quaternion.identity));
 		blackPieces.Add((GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 7), Quaternion.identity));
@@ -440,6 +492,9 @@ public class GameController : MonoBehaviour {
 				WhitePiecesController whitePieceController = selectedPiece.GetComponent<WhitePiecesController> ();
 					foreach(Vector3 v3 in possibleMovements){
 						if(v3.x == coordToMove.x && v3.z == coordToMove.z){
+							if(getSelectedPiece().name == "WhiteKing(Clone)"){
+								whiteKingPosition = coordToMove;
+							}
 							switch(gameBoard[(int)coordToMove.x, (int)coordToMove.z]){
 								case 0:
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
@@ -474,11 +529,15 @@ public class GameController : MonoBehaviour {
 							setGameState(1);
 						}
 					}
+					CheckCheck("White");
 					break;
 			case "Black":	
 				BlackPiecesController blackPieceController = selectedPiece.GetComponent<BlackPiecesController> ();
 				foreach(Vector3 v3 in possibleMovements){
 					if(v3.x == coordToMove.x && v3.z == coordToMove.z){
+						if(getSelectedPiece().name == "BlackKing(Clone)"){
+							blackKingPosition = coordToMove;
+						}
 						switch(gameBoard[(int)coordToMove.x, (int)coordToMove.z]){
 							case 0:
 								gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 0;
@@ -512,6 +571,7 @@ public class GameController : MonoBehaviour {
 						setGameState(0);
 					}
 				}
+				CheckCheck("Black");
 				break;
 		}
 	}
