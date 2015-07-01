@@ -3,16 +3,23 @@ using System.Collections;
 
 public class WhitePiecesController : MonoBehaviour {
 
-	private bool isFirstMove;
+	public Vector3 coordToMove;
+	public bool isFirstMove;
 	// Use this for initialization
 	void Start () {
 		isFirstMove = true;
+		coordToMove = new Vector3 (transform.position.x, 0.25f, transform.position.z);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		//Moving (coordToMove);
 	}
+
+	/*public void Moving(Vector3 coordToMove){
+		transform.position = Vector3.MoveTowards (transform.position, coordToMove, 10 * Time.deltaTime);
+
+	}*/
 
 	public bool IsMoveValid(Vector3 coordToMove){
 		Vector3 currentPosition = gameObject.transform.position;

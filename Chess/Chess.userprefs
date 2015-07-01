@@ -1,11 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GameController.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\WhitePiecesController.cs">
     <Files>
-      <File FileName="Assets\Scripts\GameController.cs" Line="449" Column="6" />
-      <File FileName="Assets\Scripts\BlackPiecesController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\GameController.cs" Line="103" Column="74" />
       <File FileName="Assets\Scripts\PlayerController.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\WhitePiecesController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\WhitePiecesController.cs" Line="32" Column="18" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
