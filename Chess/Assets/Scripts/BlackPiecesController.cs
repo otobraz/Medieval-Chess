@@ -1,81 +1,323 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class BlackPiecesController : MonoBehaviour {
 	
 	private bool isFirstMove;
+	
+	public Vector3 coordToMove;
 	// Use this for initialization
 	void Start () {
 		isFirstMove = true;
+		coordToMove = transform.position;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		if(tag == "Black")
+			Moving (coordToMove);
+	}
+	
+	public void Moving(Vector3 coordToMove){
+		transform.position = Vector3.MoveTowards (transform.position, new Vector3(coordToMove.x, transform.position.y, coordToMove.z), 7 * Time.deltaTime);
 		
 	}
 	
-	public bool IsMoveValid(Vector3 coordToMove){
-		Vector3 currentPosition = gameObject.transform.position;
+	public List<Vector3> GetMovementsList(int[,] gameBoard){
+		int x = (int)gameObject.transform.position.x;
+		int z = (int)gameObject.transform.position.z;
+		int y = (int)gameObject.transform.localScale.y;
+		List<Vector3> pieceMovements = new List<Vector3>();
 		switch(gameObject.name){
-			case "BlackPawn(Clone)":
-				if(currentPosition == coordToMove ){
-					return false;
-				}else if(currentPosition.z == coordToMove.z && (coordToMove.x - currentPosition.x) >= -2 && (coordToMove.x - currentPosition.x) < 0 && isFirstMove){
-					isFirstMove = false;
-					return true;
-				}else if(currentPosition.z == coordToMove.z && (coordToMove.x - currentPosition.x) == -1){
-					return true;
-				}
-				break;
-				
-			case "BlackBishop(Clone)":
-				if(currentPosition == coordToMove){
-					return false;
-				}else if((coordToMove.z - currentPosition.z) == (coordToMove.x - currentPosition.x) || (coordToMove.z + coordToMove.x) == (currentPosition.z + currentPosition.x)){
-					return true;
-				}
-				break;
-				
-			case "BlackRook(Clone)":
-				if(currentPosition == coordToMove){
-					return false;
-				}else if((coordToMove.z != currentPosition.z && coordToMove.x == currentPosition.x) || (coordToMove.z == currentPosition.z && currentPosition.x != coordToMove.x)){
-					return true;
-				}
-				break;
-				
-			case "BlackQueen(Clone)":
-				if(currentPosition == coordToMove){
-					return false;
-				}else if(((coordToMove.z != currentPosition.z && coordToMove.x == currentPosition.x) || (coordToMove.z == currentPosition.z && currentPosition.x != coordToMove.x))
-				         || ((coordToMove.z - currentPosition.z) == (coordToMove.x - currentPosition.x) || (coordToMove.z + coordToMove.x) == (currentPosition.z + currentPosition.x))){
-					return true;
-				}
-				break;
-				
-			case "BlackKing(Clone)":
-				if(currentPosition == coordToMove){
-					return false;
-				}else if(Mathf.Abs(coordToMove.z - currentPosition.z) <= 1 && Mathf.Abs(coordToMove.x - currentPosition.x) <= 1 
-				         && Mathf.Abs(coordToMove.x - currentPosition.x) >= 0 && Mathf.Abs(coordToMove.z - currentPosition.z) >= 0) {
-					return true;
-				}
-				break;
-				
-			case "BlackHorse(Clone)":
-				if(currentPosition == coordToMove){
-					return false;
-				}else if(Mathf.Abs(coordToMove.z - currentPosition.z) == 2){
-					if(Mathf.Abs(coordToMove.x - currentPosition.x) == 1){
-						return true;
+		case "BlackPawn(Clone)":
+			if(x-1 >=0 && gameBoard[x-1, z] == 0){
+				pieceMovements.Add(new Vector3(x-1, y, z));
+				if(x == 6){
+					if(gameBoard[x-2, z] == 0){
+						pieceMovements.Add(new Vector3(x-2, y, z));
 					}
-				}else if(Mathf.Abs(coordToMove.x - currentPosition.x) == 2){
-					if(Mathf.Abs(coordToMove.z - currentPosition.z) == 1){
-						return true;
+				}
+			}
+			if(z+1 < 8 && x-1 >= 0 && gameBoard[x-1, z+1] == 1){
+				pieceMovements.Add(new Vector3(x-1, y, z+1));
+			}
+			if(z-1 >= 0 && x-1 >= 0 && gameBoard[x-1, z-1] == 1){
+				pieceMovements.Add(new Vector3(x-1, y, z-1));
+			}
+			break;
+			
+		case "BlackBishop(Clone)":
+			for(int i = x+1, j = 1; i < 8 && z+j < 8; i++, j++){
+				if(gameBoard[i, z+j] != 2){
+					pieceMovements.Add(new Vector3(i, y, z+j));
+					if(gameBoard[i, z+j] == 1){
+						break;
 					}
-				}	
-				break;
+				}else{
+					break;
+				}
+			}
+			for(int i = x+1, j = 1; i < 8 && z-j >= 0; i++, j++){
+				if(gameBoard[i, z-j] != 2){
+					pieceMovements.Add(new Vector3(i, y, z-j));
+					if(gameBoard[i, z-j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x-1, j = 1; i >= 0 && z+j < 8; i--, j++){
+				if(gameBoard[i, z+j] != 2){
+					pieceMovements.Add(new Vector3(i, y, z+j));
+					if(gameBoard[i, z+j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x-1, j = 1; i >= 0 && z-j >= 0; i--, j++){
+				if(gameBoard[i, z-j] != 2){
+					pieceMovements.Add(new Vector3(i, y, z-j));
+					if(gameBoard[i, z-j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			break;
+			
+		case "BlackRook(Clone)":
+			for(int i = x+1; i < 8; i++){
+				if(gameBoard[i, z] != 2){
+					pieceMovements.Add(new Vector3(i, y, z));
+					if(gameBoard[i, z] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x-1; i >= 0; i--){
+				if(gameBoard[i, z] != 2){
+					pieceMovements.Add(new Vector3(i, y, z));
+					if(gameBoard[i, z] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int j = z+1; j < 8; j++){
+				if(gameBoard[x, j] != 2){
+					pieceMovements.Add(new Vector3(x, y, j));
+					if(gameBoard[x, j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int j = z-1; j >= 0; j--){
+				if(gameBoard[x, j] != 2){
+					pieceMovements.Add(new Vector3(x, y, j));	  
+					if(gameBoard[x, j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			break;
+			
+		case "BlackQueen(Clone)":
+			for(int i = x+1, j = 1; i < 8 && z+j < 8; i++, j++){
+				if(gameBoard[i, z+j] != 2){
+					pieceMovements.Add(new Vector3(i, y, z+j));
+					if(gameBoard[i, z+j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x+1, j = 1; i < 8 && z-j >= 0; i++, j++){
+				if(gameBoard[i, z-j] != 2){
+					pieceMovements.Add(new Vector3(i, y, z-j));
+					if(gameBoard[i, z-j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x-1, j = 1; i >= 0 && z+j < 8; i--, j++){
+				if(gameBoard[i, z+j] != 2){
+					pieceMovements.Add(new Vector3(i, y, z+j));
+					if(gameBoard[i, z+j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x-1, j = 1; i >= 0 && z-j >= 0; i--, j++){
+				if(gameBoard[i, z-j] != 2){
+					pieceMovements.Add(new Vector3(i, y, z-j));
+					if(gameBoard[i, z-j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x+1; i < 8; i++){
+				if(gameBoard[i, z] != 2){
+					pieceMovements.Add(new Vector3(i, y, z));
+					if(gameBoard[i, z] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x-1; i >= 0; i--){
+				if(gameBoard[i, z] != 2){
+					pieceMovements.Add(new Vector3(i, y, z));
+					if(gameBoard[i, z] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int j = z+1; j < 8; j++){
+				if(gameBoard[x, j] != 2){
+					pieceMovements.Add(new Vector3(x, y, j));
+					if(gameBoard[x, j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int j = z-1; j >= 0; j--){
+				if(gameBoard[x, j] != 2){
+					pieceMovements.Add(new Vector3(x, y, j));	  
+					if(gameBoard[x, j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x+1; i < 8; i++){
+				if(gameBoard[i, z] != 2){
+					pieceMovements.Add(new Vector3(i, y, z));
+					if(gameBoard[i, z] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int i = x-1; i >= 0; i--){
+				if(gameBoard[i, z] != 2){
+					pieceMovements.Add(new Vector3(i, y, z));
+					if(gameBoard[i, z] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int j = z+1; j < 8; j++){
+				if(gameBoard[x, j] != 2){
+					pieceMovements.Add(new Vector3(x, y, j));
+					if(gameBoard[x, j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			for(int j = z-1; j >= 0; j--){
+				if(gameBoard[x, j] != 2){
+					pieceMovements.Add(new Vector3(x, y, j));	  
+					if(gameBoard[x, j] == 1){
+						break;
+					}
+				}else{
+					break;
+				}
+			}
+			break;
+		case "BlackKing(Clone)":
+			if(z+1 < 8 && gameBoard[x, z+1] != 2){
+				pieceMovements.Add(new Vector3(x, y, z+1));
+			}
+			if(x+1 < 8 && z+1 < 8 && gameBoard[x+1, z+1] != 2){
+				pieceMovements.Add(new Vector3(x+1, y, z+1));
+			}
+			if(z-1 >=0 && gameBoard[x, z-1] != 2){
+				pieceMovements.Add(new Vector3(x, y, z-1));
+			}
+			if(z-1 >= 0 && x-1 >= 0 && gameBoard[x-1, z-1] != 2){
+				pieceMovements.Add(new Vector3(x-1, y, z-1));
+			}
+			if(x+1 < 8 && gameBoard[x+1, z] != 2){
+				pieceMovements.Add(new Vector3(x+1, y, z));
+			}
+			if(x-1 >= 0 && gameBoard[x-1, z] != 2){
+				pieceMovements.Add(new Vector3(x-1, y, z));
+			}
+			if(x-1 >= 0 && z+1 < 8 && gameBoard[x-1, z+1] != 2){
+				pieceMovements.Add(new Vector3(x-1, y, z+1));
+			}
+			if(x+1 < 8 && z-1 >= 0 && gameBoard[x+1, z-1] != 2){
+				pieceMovements.Add(new Vector3(x+1, y, z-1));
+			}
+			break;
+			
+		case "BlackHorse(Clone)":
+			if(x+2 < 8){
+				if( z+1 < 8 && gameBoard[x+2, z+1] != 2){
+					pieceMovements.Add(new Vector3(x+2, y, z+1));          
+				}
+				if(z-1 >= 0 && gameBoard[x+2, z-1] != 2){
+					pieceMovements.Add(new Vector3(x+2, y, z-1));
+				}
+			}
+			if(x-2 >= 0){
+				if(z+1 < 8 && gameBoard[x-2, z+1] != 2){
+					pieceMovements.Add(new Vector3(x-2, y, z+1));          
+				}
+				if(z-1 >= 0 && gameBoard[x-2, z-1] != 2){
+					pieceMovements.Add(new Vector3(x-2, y, z-1));
+				}
+			}
+			if(z+2 < 8){
+				if(x+1 < 8 && gameBoard[x+1, z+2] != 2){
+					pieceMovements.Add(new Vector3(x+1, y, z+2));          
+				}
+				if(x-1 >= 0 && gameBoard[x-1, z+2] != 2){
+					pieceMovements.Add(new Vector3(x-1, y, z+2));
+				}
+			}
+			if(z-2 >= 0){
+				if(x+1 < 8 && gameBoard[x+1, z-2] != 2){
+					pieceMovements.Add(new Vector3(x+1, y, z-2));          
+				}
+				if(x-1 >= 0 && gameBoard[x-1, z-2] != 2){
+					pieceMovements.Add(new Vector3(x-1, y, z-2));
+				}
+			}
+			break;
 		}	
-		return false;
+		return pieceMovements;
 	}
 }
