@@ -6,12 +6,17 @@ using System.Collections.Generic;
 public class BlackPiecesController : MonoBehaviour {
 	
 	private bool isFirstMove;
-	
+	GameController gameController;
+	GameObject gO;
 	public Vector3 coordToMove;
+	public bool isEnPassantL, isEnPassantR;
+
 	// Use this for initialization
 	void Start () {
 		isFirstMove = true;
 		coordToMove = transform.position;
+		isEnPassantL = false;
+		isEnPassantR = false;
 	}
 	
 	// Update is called once per frame
@@ -46,6 +51,10 @@ public class BlackPiecesController : MonoBehaviour {
 			if(z-1 >= 0 && x-1 >= 0 && gameBoard[x-1, z-1] == 1){
 				pieceMovements.Add(new Vector3(x-1, y, z-1));
 			}
+			if(isEnPassantL){
+				pieceMovements.Add (new Vector3(x-1, y, z-1));Debug.Log ("e");}
+			if(isEnPassantR){
+				pieceMovements.Add(new Vector3(x-1, y, z+1));Debug.Log ("f");}
 			break;
 			
 		case "BlackBishop(Clone)":
@@ -280,6 +289,27 @@ public class BlackPiecesController : MonoBehaviour {
 			}
 			if(x+1 < 8 && z-1 >= 0 && gameBoard[x+1, z-1] != 2){
 				pieceMovements.Add(new Vector3(x+1, y, z-1));
+			}
+			if(isFirstMove){
+				gO = GameObject.FindGameObjectWithTag("GameController");
+				gameController = gO.GetComponent<GameController>();
+				GameObject[] blackRooks = gameController.GetBlackRooks();
+				for(int i = (int)transform.position.z-1; i > blackRooks[0].transform.position.z; i--){
+					if(gameBoard[(int)transform.position.x, i] != 0){
+						break;
+					}
+					if(blackRooks[0].GetComponent<BlackPiecesController>().isFirstMove){
+						pieceMovements.Add(new Vector3(x, y, z-2));
+					}
+				}
+				for(int i = (int)transform.position.z+1; i < blackRooks[1].transform.position.z; i++){
+					if(gameBoard[(int)transform.position.x, i] != 0){
+						break;
+					}
+					if(blackRooks[1].GetComponent<BlackPiecesController>().isFirstMove){
+						pieceMovements.Add(new Vector3(x, y, z+2));
+					}
+				}
 			}
 			break;
 			

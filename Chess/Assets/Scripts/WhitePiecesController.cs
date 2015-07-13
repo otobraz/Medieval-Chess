@@ -6,14 +6,19 @@ using System.Collections.Generic;
 public class WhitePiecesController : MonoBehaviour {
 	
 	private bool isFirstMove;
+	public bool isEnPassantL, isEnPassantR;
 	GameController gameController;
-
-
+	GameObject gO;
 	public Vector3 coordToMove;
+
 	// Use this for initialization
 	void Start () {
 		coordToMove = transform.position;
 		isFirstMove = true;
+		isEnPassantL = false;
+		isEnPassantR = false;
+		gO = GameObject.FindGameObjectWithTag("GameController");
+		gameController = gO.GetComponent<GameController>();
 	}
 	
 	// Update is called once per frame
@@ -21,6 +26,8 @@ public class WhitePiecesController : MonoBehaviour {
 		if(tag == "White"){
 			Moving (coordToMove);
 		}
+		if (coordToMove.x != transform.position.x || coordToMove.z != transform.position.z)
+			isFirstMove = false;
 	}
 
 
@@ -48,6 +55,12 @@ public class WhitePiecesController : MonoBehaviour {
 					}
 					if(z-1 >= 0 && x+1 < 8 && gameBoard[x+1, z-1] == 2){
 						pieceMovements.Add(new Vector3(x+1, y, z-1));
+					}
+					if(isEnPassantL){
+						pieceMovements.Add (new Vector3(x+1, y, z-1));
+					}
+					if(isEnPassantR){
+						pieceMovements.Add(new Vector3(x+1, y, z+1));
 					}
 					break;
 				
@@ -284,6 +297,26 @@ public class WhitePiecesController : MonoBehaviour {
 				if(x+1 < 8 && z-1 >= 0 && gameBoard[x+1, z-1] != 1){
 					pieceMovements.Add(new Vector3(x+1, y, z-1));
 				}
+				if(isFirstMove){
+					GameObject[] whiteRooks = gameController.GetWhiteRooks();
+					for(int i = (int)transform.position.z-1; i > whiteRooks[0].transform.position.z; i--){
+					if(gameBoard[(int)transform.position.x, i] != 0){
+							break;
+						}
+						if(whiteRooks[0].GetComponent<WhitePiecesController>().isFirstMove){
+							pieceMovements.Add(new Vector3(x, y, z-2));
+						}
+					}
+					for(int i = (int)transform.position.z+1; i < whiteRooks[1].transform.position.z; i++){
+						if(gameBoard[(int)transform.position.x, i] != 0){
+							break;
+						}
+						if(whiteRooks[1].GetComponent<WhitePiecesController>().isFirstMove){
+							pieceMovements.Add(new Vector3(x, y, z+2));
+						}
+					}
+					
+				}
 				break;
 				
 			case "WhiteHorse(Clone)":
@@ -321,6 +354,6 @@ public class WhitePiecesController : MonoBehaviour {
 				}
 				break;
 		}	
-		return pieceMovements;
+			return pieceMovements;
 	}
 }
