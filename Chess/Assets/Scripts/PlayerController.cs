@@ -4,11 +4,12 @@ using System.Collections;
 public class PlayerController : MonoBehaviour {
 
 	private Camera camera;
+	public Transform target;
 	private GameController gameController;
 	
 	// Use this for initialization
 	void Start () {
-		camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the Camera's GameObject from its tag 
+		camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>(); // Find the Camera's GameObject from its tag
 		gameController = gameObject.GetComponent<GameController>();
 		if (gameController == null) {
 			Debug.Log("It was not possible to get GameController script");		
@@ -26,7 +27,12 @@ public class PlayerController : MonoBehaviour {
 		RaycastHit _hitInfo;
 
 		if (gameController.GetGameState() == 0) {
-			// On Left Click
+			if(camera.transform.eulerAngles.y > 90.1f){
+				camera.transform.RotateAround (target.position,new Vector3(0.0f,1.0f,0.0f),-20 * Time.deltaTime * 10);
+			}else{
+				camera.transform.rotation = Quaternion.Euler(65, 90, 0);
+				camera.transform.position = new Vector3(-0.5f, 5.8f, 3.5f);
+			}
 			if(Input.GetMouseButtonDown(0))	{
 				_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click	
 				if(Physics.Raycast (_ray,out _hitInfo)){ 	// Raycast and verify that it collided
@@ -39,6 +45,12 @@ public class PlayerController : MonoBehaviour {
 				}
 			}
 		}else if(gameController.GetGameState() == 1){
+			if(camera.transform.eulerAngles.y < 270){
+				camera.transform.RotateAround (target.position,new Vector3(0.0f,1.0f,0.0f),20 * Time.deltaTime * 10);
+			}else{
+				camera.transform.rotation = Quaternion.Euler(65, 270, 0);
+				camera.transform.position = new Vector3(7.5f, 5.8f, 3.5f);
+			}
 			if(Input.GetMouseButtonDown(0))	{
 				_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click	
 				if(Physics.Raycast (_ray,out _hitInfo)){ // Raycast and verify that it collided

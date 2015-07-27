@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour {
 	
 	List<Vector3> threatMovements = new List<Vector3>();
 	
-	private bool isCheck, isPromotion;
+	private bool isCheck, isPromotion, isCheckMate, restart;
 	
 	private Texture2D wRookImage, wBishopImage, wHorseImage, wQueenImage;
 	
@@ -36,16 +36,21 @@ public class GameController : MonoBehaviour {
 	private float screenWidth, screenHeight, buttonWidth, buttonHeight;
 	
 	private Vector3 coord, rookCoord;
+
+	private GUIStyle fontStyle;
 	
 	//  Use this for initialization
 	void Start () {	
 		InitializeGameBoard ();
+		fontStyle = new GUIStyle ();
 		SetGameState (0);
 		nBlackCaptured = 0;
 		nWhiteCaptured = 0;
 		nThreats = 0;
 		isCheck = false;
 		isPromotion = false;
+		isCheckMate = false;
+		restart = false;
 		wRookImage = Resources.Load ("whiteRook") as Texture2D;
 		wBishopImage = Resources.Load ("whiteBishop") as Texture2D;
 		wHorseImage = Resources.Load ("whiteHorse") as Texture2D;
@@ -136,8 +141,11 @@ public class GameController : MonoBehaviour {
 							SetGameState(1);
 						}
 						IsCheck ("Black", (int)bKing.transform.position.x, (int)bKing.transform.position.z);
-						if(isCheck)
-							IsCheckMate(bKing);
+						if(isCheck && IsCheckMate(bKing)){		
+							restart = true;
+							fontStyle.normal.textColor = Color.white;
+							SetGameState(2);
+						}
 					}
 					
 				}else if(selectedPiece.tag == "Black"){
@@ -153,10 +161,18 @@ public class GameController : MonoBehaviour {
 							SetGameState(0);
 						}
 						IsCheck ("White", (int)wKing.transform.position.x, (int)wKing.transform.position.z);
-						if(isCheck)
-							IsCheckMate(wKing);
+						if(isCheck && IsCheckMate(wKing)){		
+							restart = true;
+							fontStyle.normal.textColor = Color.black;
+							SetGameState(2);
+						}
 					}
 				}
+			}
+		}
+		if (restart) {
+			if(Input.GetKeyDown(KeyCode.R)){
+				Application.LoadLevel(Application.loadedLevel);
 			}
 		}
 	}
@@ -194,7 +210,31 @@ public class GameController : MonoBehaviour {
 				break;
 			}
 		}
+		if (isCheck) {
+			GUI.backgroundColor = new Color(1,1,1,0.7f);
+			fontStyle.fontSize = Mathf.RoundToInt (screenWidth / 53);
+			GUI.Box(new Rect(screenWidth - screenWidth/1.06f, screenHeight - screenHeight/1.03f, screenWidth/7, screenHeight/5), "");
+			if(GetGameState() == 1)
+				fontStyle.normal.textColor = Color.white;
+			else if(GetGameState() == 0)
+				fontStyle.normal.textColor = Color.black;
+			if(isCheckMate){
+				GUI.Label(new Rect(screenWidth - screenWidth/1.07f, screenHeight - screenHeight/1.06f, screenWidth/7, screenHeight/5), "CHECKMATE!", fontStyle);
+				if(fontStyle.normal.textColor == Color.white){
+					GUI.Label(new Rect(screenWidth - screenWidth/1.07f, screenHeight - screenHeight/1.17f, screenWidth/7, screenHeight/5), "WHITE WINS!!", fontStyle);
+				}else{
+					GUI.Label(new Rect(screenWidth - screenWidth/1.07f, screenHeight - screenHeight/1.17f, screenWidth/7, screenHeight/5), "BLACK WINS!!", fontStyle);
+				}
+				fontStyle.fontSize = Mathf.RoundToInt (screenWidth / 30);
+				GUI.Box(new Rect(screenWidth/2 - screenWidth/6f, screenHeight - screenHeight/1.35f, screenWidth/3, screenHeight/4), "");
+				GUI.Label(new Rect(screenWidth/2 - screenWidth/7.5f, screenHeight - screenHeight/1.5f, screenWidth/2, screenHeight/2), "Press R to restart", fontStyle);
+
+				}else{
+				GUI.Label(new Rect(screenWidth - screenWidth/1.1f, screenHeight - screenHeight/1.12f, screenWidth/7, screenHeight/5), "CHECK!", fontStyle);
+			}
+		}
 	}
+
 	
 	public GameObject[] GetWhiteRooks(){
 		GameObject[] whiteRooks = new GameObject[]{wRookL, wRookR};
@@ -368,6 +408,7 @@ public class GameController : MonoBehaviour {
 	
 	public bool IsCheckMate(GameObject king){
 		bool verifier = false, checkMate = true;
+		isCheckMate = true;
 		possibleMovements.Clear ();
 		WhitePiecesController wPC;
 		BlackPiecesController bPC;
@@ -447,6 +488,7 @@ public class GameController : MonoBehaviour {
 			}
 		}
 		Debug.Log (checkMate);
+		isCheckMate = checkMate;
 		return checkMate;
 	}
 	
@@ -552,12 +594,14 @@ public class GameController : MonoBehaviour {
 							gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 1;
 							if(selectedPiece.name == "WhiteKing(Clone)"){
 								if(IsCheck("White", (int)coordToMove.x, (int)coordToMove.z)){
+									isCheck = false;
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 1;
 									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 0;
 									break;
 								}
 							}else{
 								if(IsCheck("White", (int)wKing.transform.position.x, (int)wKing.transform.position.z)){
+									isCheck = false;
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 1;
 									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 0;
 									break;
@@ -608,12 +652,14 @@ public class GameController : MonoBehaviour {
 							}
 							if(selectedPiece.name == "WhiteKing(Clone)"){
 								if(IsCheck("White", (int)coordToMove.x, (int)coordToMove.z)){
+									isCheck = false;
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 1;
 									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 0;
 									break;
 								}
 							}else{
 								if(IsCheck("White", (int)wKing.transform.position.x, (int)wKing.transform.position.z)){
+									isCheck = false;
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 1;
 									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 0;
 									break;
