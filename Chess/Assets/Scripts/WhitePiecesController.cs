@@ -30,7 +30,6 @@ public class WhitePiecesController : MonoBehaviour {
 			isFirstMove = false;
 	}
 
-
 	public void Moving(Vector3 coordToMove){
 		transform.position = Vector3.MoveTowards (transform.position, new Vector3(coordToMove.x, transform.position.y, coordToMove.z), 7 * Time.deltaTime);
 	}

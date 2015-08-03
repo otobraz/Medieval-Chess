@@ -30,8 +30,8 @@ public class PlayerController : MonoBehaviour {
 			if(camera.transform.eulerAngles.y > 90.1f){
 				camera.transform.RotateAround (target.position,new Vector3(0.0f,1.0f,0.0f),-20 * Time.deltaTime * 10);
 			}else{
-				camera.transform.rotation = Quaternion.Euler(65, 90, 0);
-				camera.transform.position = new Vector3(-0.5f, 5.8f, 3.5f);
+				camera.transform.rotation = Quaternion.Euler(50, 90, 0);
+				camera.transform.position = new Vector3(-3f, 5.8f, 3.5f);
 			}
 			if(Input.GetMouseButtonDown(0))	{
 				_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click	
@@ -48,8 +48,8 @@ public class PlayerController : MonoBehaviour {
 			if(camera.transform.eulerAngles.y < 270){
 				camera.transform.RotateAround (target.position,new Vector3(0.0f,1.0f,0.0f),20 * Time.deltaTime * 10);
 			}else{
-				camera.transform.rotation = Quaternion.Euler(65, 270, 0);
-				camera.transform.position = new Vector3(7.5f, 5.8f, 3.5f);
+				camera.transform.rotation = Quaternion.Euler(50, 270, 0);
+				camera.transform.position = new Vector3(10f, 5.8f, 3.5f);
 			}
 			if(Input.GetMouseButtonDown(0))	{
 				_ray = camera.ScreenPointToRay(Input.mousePosition); // Specify the ray to be casted from the position of the mouse click	

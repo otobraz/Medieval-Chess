@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour {
 	
 	public GameObject blackPawn, blackRook, blackHorse, blackBishop, blackQueen, blackKing;
 	
-	public GameObject whitePawn, whiteRook, whiteHorse, whiteBishop, whiteQueen, whiteKing;
+	public GameObject whitePawn, whiteRook, whiteHorse, whiteBishop, whiteQueen, whiteKing, particle;
 	
 	private int gameState, nBlackCaptured, nWhiteCaptured, nThreats;
 	
@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour {
 	
 	private int index;
 	
-	private GameObject wKing, wRookL, wRookR, bRookL, bRookR, bKing;
+	private GameObject wKing, wRookL, wRookR, bRookL, bRookR, bKing, selectionParticle;
 	
 	private List<GameObject> whitePieces = new List<GameObject>();
 	
@@ -65,6 +65,8 @@ public class GameController : MonoBehaviour {
 		buttonHeight = screenHeight / 5;
 		coord = new Vector3 (8, 8, 8);
 		rookCoord = new Vector3(8, 8, 8);
+		//selectionParticle = (GameObject)Instantiate (particle, particle.transform.position, Quaternion.Euler(-90, 0, 0));
+
 	}
 	
 	// Update is called once per frame
@@ -408,7 +410,7 @@ public class GameController : MonoBehaviour {
 	
 	public bool IsCheckMate(GameObject king){
 		bool verifier = false, checkMate = true;
-		isCheckMate = true;
+		//isCheckMate = true;
 		possibleMovements.Clear ();
 		WhitePiecesController wPC;
 		BlackPiecesController bPC;
@@ -512,8 +514,8 @@ public class GameController : MonoBehaviour {
 		whitePieces.Add(wRookL);
 		whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 1), Quaternion.identity));
 		whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 2), Quaternion.identity));
-		whitePieces.Add((GameObject)Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 3), Quaternion.identity));
-		wKing = (GameObject)Instantiate (whiteKing, new Vector3 (0, whiteKing.transform.position.y, 4), whiteKing.transform.rotation);
+		whitePieces.Add((GameObject)Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 4), Quaternion.identity));
+		wKing = (GameObject)Instantiate (whiteKing, new Vector3 (0, whiteKing.transform.position.y, 3), whiteKing.transform.rotation);
 		whitePieces.Add (wKing);
 		whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 5), Quaternion.identity));
 		whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 6), Quaternion.identity));
@@ -524,8 +526,8 @@ public class GameController : MonoBehaviour {
 		blackPieces.Add(bRookL);
 		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 1), Quaternion.identity));
 		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 2), Quaternion.identity));
-		blackPieces.Add((GameObject)Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 3), Quaternion.identity));
-		bKing = (GameObject)Instantiate (blackKing, new Vector3 (7, blackKing.transform.position.y, 4), blackKing.transform.rotation);
+		blackPieces.Add((GameObject)Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 4), Quaternion.identity));
+		bKing = (GameObject)Instantiate (blackKing, new Vector3 (7, blackKing.transform.position.y, 3), blackKing.transform.rotation);
 		blackPieces.Add (bKing);
 		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 5), Quaternion.identity));
 		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), Quaternion.identity));
@@ -544,6 +546,8 @@ public class GameController : MonoBehaviour {
 		Debug.Log("Animation_Selection"); //Play animation(selection)
 		possibleMovements.Clear();
 		selectedPiece = piece;
+		/*selectionParticle.SetActive (true);
+		particle.transform.position = selectedPiece.transform.position;*/
 		Debug.Log (selectedPiece.name + " is selected");
 	}
 	
