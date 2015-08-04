@@ -138,6 +138,8 @@ public class GameController : MonoBehaviour {
 					}
 					if(gameState == 0){
 						IsCheck("White", (int)wKing.transform.position.x, (int)wKing.transform.position.z);
+						selectedPiece.animation.Stop ();
+						selectedPiece.transform.rotation = Quaternion.Euler(0, 90, 0);
 						selectedPiece = null;
 						if(!isCheck){
 							SetGameState(1);
@@ -158,6 +160,8 @@ public class GameController : MonoBehaviour {
 					}
 					if(gameState == 1){
 						IsCheck("Black", (int)bKing.transform.position.x, (int)bKing.transform.position.z);
+						selectedPiece.animation.Stop ();
+						selectedPiece.transform.rotation = Quaternion.Euler(0, -90, 0);
 						selectedPiece = null;
 						if(!isCheck){
 							SetGameState(0);
@@ -513,11 +517,11 @@ public class GameController : MonoBehaviour {
 		wRookL = (GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 0), Quaternion.Euler(0,-90,0));
 		whitePieces.Add(wRookL);
 		whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 1), Quaternion.identity));
-		whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 2), Quaternion.identity));
+		whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 2), whiteBishop.transform.rotation));
 		whitePieces.Add((GameObject)Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 4), Quaternion.identity));
 		wKing = (GameObject)Instantiate (whiteKing, new Vector3 (0, whiteKing.transform.position.y, 3), whiteKing.transform.rotation);
 		whitePieces.Add (wKing);
-		whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 5), Quaternion.identity));
+		whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 5), whiteBishop.transform.rotation));
 		whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 6), Quaternion.identity));
 		wRookR = (GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 7), Quaternion.Euler(0, -90, 0));
 		whitePieces.Add (wRookR);
@@ -525,11 +529,11 @@ public class GameController : MonoBehaviour {
 		bRookL = (GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 0), Quaternion.identity);
 		blackPieces.Add(bRookL);
 		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 1), Quaternion.identity));
-		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 2), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 2), blackBishop.transform.rotation));
 		blackPieces.Add((GameObject)Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 4), Quaternion.identity));
 		bKing = (GameObject)Instantiate (blackKing, new Vector3 (7, blackKing.transform.position.y, 3), blackKing.transform.rotation);
 		blackPieces.Add (bKing);
-		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 5), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 5), blackBishop.transform.rotation));
 		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), Quaternion.identity));
 		bRookR = (GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 7), Quaternion.identity);
 		blackPieces.Add(bRookL);
@@ -545,7 +549,17 @@ public class GameController : MonoBehaviour {
 		
 		Debug.Log("Animation_Selection"); //Play animation(selection)
 		possibleMovements.Clear();
+		if(selectedPiece != null){
+			selectedPiece.animation.Stop ();
+			if(gameState == 0)
+				selectedPiece.transform.rotation = Quaternion.Euler(0, 90, 0);
+
+			else
+				selectedPiece.transform.rotation = Quaternion.Euler(0, -90, 0);
+			selectedPiece.animation.Stop ();
+		}
 		selectedPiece = piece;
+		selectedPiece.animation.Play ();
 		/*selectionParticle.SetActive (true);
 		particle.transform.position = selectedPiece.transform.position;*/
 		Debug.Log (selectedPiece.name + " is selected");
