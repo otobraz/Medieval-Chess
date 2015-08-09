@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour {
 	
 	public GameObject blackPawn, blackRook, blackHorse, blackBishop, blackQueen, blackKing;
 	
-	public GameObject whitePawn, whiteRook, whiteHorse, whiteBishop, whiteQueen, whiteKing, particle;
+	public GameObject whitePawn, whiteRook, whiteHorse, whiteBishop, whiteQueen, whiteKing;
 	
 	private int gameState, nBlackCaptured, nWhiteCaptured, nThreats;
 	
@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour {
 	
 	private int index;
 	
-	private GameObject wKing, wRookL, wRookR, bRookL, bRookR, bKing, selectionParticle;
+	private GameObject wKing, wRookL, wRookR, bRookL, bRookR, bKing;
 	
 	private List<GameObject> whitePieces = new List<GameObject>();
 	
@@ -139,6 +139,7 @@ public class GameController : MonoBehaviour {
 					if(gameState == 0){
 						IsCheck("White", (int)wKing.transform.position.x, (int)wKing.transform.position.z);
 						selectedPiece.animation.Stop ();
+						selectedPiece.audio.Stop();
 						selectedPiece.transform.rotation = Quaternion.Euler(0, 90, 0);
 						selectedPiece = null;
 						if(!isCheck){
@@ -161,6 +162,7 @@ public class GameController : MonoBehaviour {
 					if(gameState == 1){
 						IsCheck("Black", (int)bKing.transform.position.x, (int)bKing.transform.position.z);
 						selectedPiece.animation.Stop ();
+						selectedPiece.audio.Stop();
 						selectedPiece.transform.rotation = Quaternion.Euler(0, -90, 0);
 						selectedPiece = null;
 						if(!isCheck){
@@ -235,7 +237,7 @@ public class GameController : MonoBehaviour {
 				GUI.Box(new Rect(screenWidth/2 - screenWidth/6f, screenHeight - screenHeight/1.35f, screenWidth/3, screenHeight/4), "");
 				GUI.Label(new Rect(screenWidth/2 - screenWidth/7.5f, screenHeight - screenHeight/1.5f, screenWidth/2, screenHeight/2), "Press R to restart", fontStyle);
 
-				}else{
+			}else{
 				GUI.Label(new Rect(screenWidth - screenWidth/1.1f, screenHeight - screenHeight/1.12f, screenWidth/7, screenHeight/5), "CHECK!", fontStyle);
 			}
 		}
@@ -345,7 +347,7 @@ public class GameController : MonoBehaviour {
 		switch (pawn.tag) {
 		case "White":
 			whitePieces.Remove(pawn);
-			whitePieces.Add((GameObject)Instantiate (promotedPiece, pawn.transform.position, Quaternion.identity));
+			whitePieces.Add((GameObject)Instantiate (promotedPiece, pawn.transform.position, promotedPiece.transform.rotation));
 			Destroy (pawn);
 			selectedPiece = promotedPiece;
 			coord = promotedPiece.transform.position;
@@ -353,7 +355,7 @@ public class GameController : MonoBehaviour {
 			break;
 		case "Black":
 			blackPieces.Remove(pawn);
-			blackPieces.Add((GameObject)Instantiate (promotedPiece, pawn.transform.position, Quaternion.identity));
+			blackPieces.Add((GameObject)Instantiate (promotedPiece, pawn.transform.position, promotedPiece.transform.rotation));
 			Destroy (pawn);
 			selectedPiece = promotedPiece;
 			coord = promotedPiece.transform.position;
@@ -459,6 +461,7 @@ public class GameController : MonoBehaviour {
 						checkMate = false;
 						break;
 					}
+					verifier = false;
 				}
 				break;
 			}
@@ -508,34 +511,34 @@ public class GameController : MonoBehaviour {
 	public void InitializeGameBoard(){
 		gameBoard = new int[8, 8];
 		for (int i = 0; i < 8; i++) {
-			gameBoard[1,i] = 1;	whitePieces.Add((GameObject)Instantiate (whitePawn, new Vector3 (1, whitePawn.transform.position.y, i), Quaternion.identity));
-			gameBoard[6,i] = 2;	blackPieces.Add((GameObject)Instantiate (blackPawn, new Vector3 (6, whitePawn.transform.position.y, i), Quaternion.identity));
+			gameBoard[1,i] = 1;	whitePieces.Add((GameObject)Instantiate (whitePawn, new Vector3 (1, whitePawn.transform.position.y, i), whitePawn.transform.rotation));
+			gameBoard[6,i] = 2;	blackPieces.Add((GameObject)Instantiate (blackPawn, new Vector3 (6, whitePawn.transform.position.y, i), blackPawn.transform.rotation));
 			gameBoard[0,i] = 1;
 			gameBoard[7,i] = 2;
 		}
 		
-		wRookL = (GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 0), Quaternion.Euler(0,-90,0));
+		wRookL = (GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 0), whiteRook.transform.rotation);
 		whitePieces.Add(wRookL);
-		whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 1), Quaternion.identity));
+		whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 1), whiteHorse.transform.rotation));
 		whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 2), whiteBishop.transform.rotation));
-		whitePieces.Add((GameObject)Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 4), Quaternion.identity));
+		whitePieces.Add((GameObject)Instantiate (whiteQueen, new Vector3 (0, whiteQueen.transform.position.y, 4), whiteQueen.transform.rotation));
 		wKing = (GameObject)Instantiate (whiteKing, new Vector3 (0, whiteKing.transform.position.y, 3), whiteKing.transform.rotation);
 		whitePieces.Add (wKing);
 		whitePieces.Add((GameObject)Instantiate (whiteBishop, new Vector3 (0, whiteBishop.transform.position.y, 5), whiteBishop.transform.rotation));
-		whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 6), Quaternion.identity));
-		wRookR = (GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 7), Quaternion.Euler(0, -90, 0));
+		whitePieces.Add((GameObject)Instantiate (whiteHorse, new Vector3 (0, whiteHorse.transform.position.y, 6), whiteHorse.transform.rotation));
+		wRookR = (GameObject)Instantiate (whiteRook, new Vector3 (0, whiteRook.transform.position.y, 7), whiteRook.transform.rotation);
 		whitePieces.Add (wRookR);
 		
-		bRookL = (GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 0), Quaternion.identity);
+		bRookL = (GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 0), blackRook.transform.rotation);
 		blackPieces.Add(bRookL);
-		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 1), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 1), blackHorse.transform.rotation));
 		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 2), blackBishop.transform.rotation));
-		blackPieces.Add((GameObject)Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 4), Quaternion.identity));
+		blackPieces.Add((GameObject)Instantiate (blackQueen, new Vector3 (7, blackQueen.transform.position.y, 4), blackQueen.transform.rotation));
 		bKing = (GameObject)Instantiate (blackKing, new Vector3 (7, blackKing.transform.position.y, 3), blackKing.transform.rotation);
 		blackPieces.Add (bKing);
 		blackPieces.Add((GameObject)Instantiate (blackBishop, new Vector3 (7, blackBishop.transform.position.y, 5), blackBishop.transform.rotation));
-		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), Quaternion.identity));
-		bRookR = (GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 7), Quaternion.identity);
+		blackPieces.Add((GameObject)Instantiate (blackHorse, new Vector3 (7, blackHorse.transform.position.y, 6), blackHorse.transform.rotation));
+		bRookR = (GameObject)Instantiate (blackRook, new Vector3 (7, blackRook.transform.position.y, 7), blackRook.transform.rotation);
 		blackPieces.Add(bRookL);
 	}
 	
@@ -641,6 +644,7 @@ public class GameController : MonoBehaviour {
 								}
 							}
 							wPC.coordToMove = coordToMove;	
+							selectedPiece.audio.Play();
 							if(selectedPiece.name == "WhiteKing(Clone)"){
 								if(selectedPiece.transform.position.z - coordToMove.z == 2){
 									rookCoord = new Vector3(wRookL.transform.position.x, wRookL.transform.position.y, coordToMove.z+1);
@@ -686,6 +690,7 @@ public class GameController : MonoBehaviour {
 							blackPieces.Add(piece);
 							Debug.Log ("Animation_eating"); //Play animation(eating)
 							wPC.coordToMove = coordToMove;
+							selectedPiece.audio.Play();
 							break;
 						}
 						break;
@@ -733,12 +738,14 @@ public class GameController : MonoBehaviour {
 							gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 2;
 							if(selectedPiece.name == "BlackKing(Clone)"){
 								if(IsCheck("Black", (int)coordToMove.x, (int)coordToMove.z)){
+									isCheck = false;
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 2;
 									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 0;
 									break;
 								}
 							}else{
 								if(IsCheck("Black", (int)bKing.transform.position.x, (int)bKing.transform.position.z)){
+									isCheck = false;
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 2;
 									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 0;
 									break;
@@ -760,6 +767,7 @@ public class GameController : MonoBehaviour {
 								}
 							}
 							bPC.coordToMove = coordToMove;
+							selectedPiece.audio.Play();
 							if(selectedPiece.name == "BlackKing(Clone)"){
 								if(selectedPiece.transform.position.z - coordToMove.z == 2){
 									bRookL.GetComponent<BlackPiecesController>().coordToMove = new Vector3(bRookL.transform.position.x, bRookL.transform.position.y, coordToMove.z+1);
@@ -787,12 +795,14 @@ public class GameController : MonoBehaviour {
 							}
 							if(selectedPiece.name == "BlackKing(Clone)"){
 								if(IsCheck("Black", (int)coordToMove.x, (int)coordToMove.z)){
+									isCheck = false;
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 2;
 									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 0;
 									break;
 								}
 							}else{
 								if(IsCheck("Black", (int)bKing.transform.position.x, (int)bKing.transform.position.z)){
+									isCheck = false;
 									gameBoard[(int)selectedPiece.transform.position.x, (int)selectedPiece.transform.position.z] = 2;
 									gameBoard[(int)coordToMove.x, (int)coordToMove.z] = 0;
 									break;
@@ -801,6 +811,7 @@ public class GameController : MonoBehaviour {
 							whitePieces.Add(piece);
 							Debug.Log ("Animation_eating"); //Play animation(eating) 
 							bPC.coordToMove = coordToMove;
+							selectedPiece.audio.Play();
 							break;
 						}
 						break;
