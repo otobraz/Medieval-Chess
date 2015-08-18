@@ -138,8 +138,8 @@ public class GameController : MonoBehaviour {
 					}
 					if(gameState == 0){
 						IsCheck("White", (int)wKing.transform.position.x, (int)wKing.transform.position.z);
-						selectedPiece.animation.Stop ();
-						selectedPiece.audio.Stop();
+						selectedPiece.GetComponent<Animation>().Stop ();
+						selectedPiece.GetComponent<AudioSource>().Stop();
 						selectedPiece.transform.rotation = Quaternion.Euler(0, 90, 0);
 						selectedPiece = null;
 						if(!isCheck){
@@ -161,8 +161,8 @@ public class GameController : MonoBehaviour {
 					}
 					if(gameState == 1){
 						IsCheck("Black", (int)bKing.transform.position.x, (int)bKing.transform.position.z);
-						selectedPiece.animation.Stop ();
-						selectedPiece.audio.Stop();
+						selectedPiece.GetComponent<Animation>().Stop ();
+						selectedPiece.GetComponent<AudioSource>().Stop();
 						selectedPiece.transform.rotation = Quaternion.Euler(0, -90, 0);
 						selectedPiece = null;
 						if(!isCheck){
@@ -553,16 +553,16 @@ public class GameController : MonoBehaviour {
 		Debug.Log("Animation_Selection"); //Play animation(selection)
 		possibleMovements.Clear();
 		if(selectedPiece != null){
-			selectedPiece.animation.Stop ();
+			selectedPiece.GetComponent<Animation>().Stop ();
 			if(gameState == 0)
 				selectedPiece.transform.rotation = Quaternion.Euler(0, 90, 0);
 
 			else
 				selectedPiece.transform.rotation = Quaternion.Euler(0, -90, 0);
-			selectedPiece.animation.Stop ();
+			selectedPiece.GetComponent<Animation>().Stop ();
 		}
 		selectedPiece = piece;
-		selectedPiece.animation.Play ();
+		selectedPiece.GetComponent<Animation>().Play ();
 		/*selectionParticle.SetActive (true);
 		particle.transform.position = selectedPiece.transform.position;*/
 		Debug.Log (selectedPiece.name + " is selected");
@@ -644,7 +644,7 @@ public class GameController : MonoBehaviour {
 								}
 							}
 							wPC.coordToMove = coordToMove;	
-							selectedPiece.audio.Play();
+							selectedPiece.GetComponent<AudioSource>().Play();
 							if(selectedPiece.name == "WhiteKing(Clone)"){
 								if(selectedPiece.transform.position.z - coordToMove.z == 2){
 									rookCoord = new Vector3(wRookL.transform.position.x, wRookL.transform.position.y, coordToMove.z+1);
@@ -690,7 +690,7 @@ public class GameController : MonoBehaviour {
 							blackPieces.Add(piece);
 							Debug.Log ("Animation_eating"); //Play animation(eating)
 							wPC.coordToMove = coordToMove;
-							selectedPiece.audio.Play();
+							selectedPiece.GetComponent<AudioSource>().Play();
 							break;
 						}
 						break;
@@ -767,7 +767,7 @@ public class GameController : MonoBehaviour {
 								}
 							}
 							bPC.coordToMove = coordToMove;
-							selectedPiece.audio.Play();
+							selectedPiece.GetComponent<AudioSource>().Play();
 							if(selectedPiece.name == "BlackKing(Clone)"){
 								if(selectedPiece.transform.position.z - coordToMove.z == 2){
 									bRookL.GetComponent<BlackPiecesController>().coordToMove = new Vector3(bRookL.transform.position.x, bRookL.transform.position.y, coordToMove.z+1);
@@ -811,7 +811,7 @@ public class GameController : MonoBehaviour {
 							whitePieces.Add(piece);
 							Debug.Log ("Animation_eating"); //Play animation(eating) 
 							bPC.coordToMove = coordToMove;
-							selectedPiece.audio.Play();
+							selectedPiece.GetComponent<AudioSource>().Play();
 							break;
 						}
 						break;
