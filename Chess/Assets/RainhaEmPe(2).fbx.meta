@@ -1,7 +1,7 @@
 fileFormatVersion: 2
 guid: 9e22b1c77cbeb204fad9871312fbf6d0
 ModelImporter:
-  serializedVersion: 16
+  serializedVersion: 18
   fileIDToRecycleName:
     100000: AnteBra__oDir
     100002: AnteBra__oEsq
@@ -57,6 +57,22 @@ ModelImporter:
     100102: OssoTorax
     100104: Rainha
     100106: //RootNode
+    100108: "AnteBra\xE7oDir"
+    100110: "AnteBra\xE7oEsq"
+    100112: "Bra\xE7oDir"
+    100114: "Bra\xE7oEsq"
+    100116: "M\xE3oDirAnular"
+    100118: "M\xE3oDirFuraBolo"
+    100120: "M\xE3oDirMaiorDeTodos"
+    100122: "M\xE3oDirMindinho"
+    100124: "M\xE3oDirPolegar"
+    100126: "M\xE3oEsqAnular"
+    100128: "M\xE3oEsqFuraBolo"
+    100130: "M\xE3oEsqMaiorDeTodos"
+    100132: "M\xE3oEsqMindinho"
+    100134: "M\xE3oEsqPolegar"
+    100136: "OssoCabe\xE7a"
+    100138: "OssoCabe\xE7a_end"
     400000: AnteBra__oDir
     400002: AnteBra__oEsq
     400004: Bra__oDir
@@ -111,6 +127,22 @@ ModelImporter:
     400102: OssoTorax
     400104: Rainha
     400106: //RootNode
+    400108: "AnteBra\xE7oDir"
+    400110: "AnteBra\xE7oEsq"
+    400112: "Bra\xE7oDir"
+    400114: "Bra\xE7oEsq"
+    400116: "M\xE3oDirAnular"
+    400118: "M\xE3oDirFuraBolo"
+    400120: "M\xE3oDirMaiorDeTodos"
+    400122: "M\xE3oDirMindinho"
+    400124: "M\xE3oDirPolegar"
+    400126: "M\xE3oEsqAnular"
+    400128: "M\xE3oEsqFuraBolo"
+    400130: "M\xE3oEsqMaiorDeTodos"
+    400132: "M\xE3oEsqMindinho"
+    400134: "M\xE3oEsqPolegar"
+    400136: "OssoCabe\xE7a"
+    400138: "OssoCabe\xE7a_end"
     2300000: Rainha
     3300000: Rainha
     4300000: Rainha
@@ -124,6 +156,10 @@ ModelImporter:
     bakeSimulation: 0
     optimizeGameObjects: 0
     motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -142,11 +178,13 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 1
+    keepQuads: 0
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
+    useFileScale: 0
   tangentSpace:
     normalSmoothAngle: 60
     splitTangentsAcrossUV: 1
@@ -165,7 +203,11 @@ ModelImporter:
     legStretch: .0500000007
     feetSpacing: 0
     rootMotionBoneName: 
+    hasTranslationDoF: 0
   lastHumanDescriptionAvatarSource: {instanceID: 0}
   animationType: 2
+  humanoidOversampling: 1
   additionalBone: 0
   userData: 
+  assetBundleName: 
+  assetBundleVariant: 
